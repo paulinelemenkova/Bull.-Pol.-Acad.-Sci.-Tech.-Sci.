@@ -1,0 +1,177 @@
+\documentclass[10pt,twoside,twocolumn,a4paper]{article}
+
+%% Default action is for double-blinded peer review where 
+%% authors, address and acknowledgements sections are hidden 
+%\usepackage[]{bpasts}
+%% For accepted papers enable option "accepted" to deanonymize
+%% your manuscript 
+\usepackage[accepted]{bpasts}
+
+\usepackage{t1enc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amsfonts}
+
+\usepackage{graphicx}
+\usepackage{flushend}
+
+\usepackage[colorlinks=true, allcolors=bpastsblue, pdfborder={0 0 0}]{hyperref}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% HEADER OF THE ARTICLE (Change all fields)
+\abtitle{Paper for BPASTS}
+\title{Scripting Technical Applications in Cartography: Using GMT and Iris Seismic Data for Geophysical Mapping of Panama}
+
+\abauthor{Polina Lemenkova}
+\author{Polina Lemenkova$^{1}$$^{2}$\email{polina.lemenkova@ulb.be}}
+
+\Address{$^1$ Université Libre de Bruxelles, École polytechnique de Bruxelles (Brussels Faculty of Engineering), Laboratory of Image Synthesis and Analysis (LISA). Building L, Campus de Solbosch, Avenue Franklin Roosevelt 50, Brussels 1000, Belgium \\ $^2$ Schmidt Institute of Physics of the Earth, Russian Academy of Sciences. Department of Natural Disasters, Anthropogenic Hazards and Seismicity of the Earth. Laboratory of Regional Geophysics and Natural Disasters (303). Moscow, 123995, Russia}
+
+\Abstract{Machine learning techniques in cartography benefit from using scripts. This study presents the use of Generic Mapping Tools (GMT) for technical visualisation of geophysical setting of Panama. Specific points include seismic mapping by using earthquake dataset IRIS and visualisation of gravity. The examples of scripts are presented and discussed. Earthquakes are recognised as hazardous geologic events often accompanied by devastating events, such as landslides, tsunami, rockfalls, damage of buildings and losses of human lives. By mapping earthquakes, visualisation of the regions of high seismicity can provide an important source of information for risk assessment. Currently, our understanding of the spatial distribution of earthquakes in Panama and its coastal areas is limited compared to other Central American countries. Nevertheless, regular monitoring and accurate visualisation of the seismically endangered areas may serve to the prevention, mitigation and prognosis of geological risks in Panama, a key hub connecting marine transport between the Pacific and Atlantic oceans. Besides the economic importance, Panama is notable for precious environment and high biodiversity including mangroves ecosystems that requires protection. Using GMT as an advanced cartographic tool, this paper presented six new geophysical maps of Panama based on the high-resolution data including IRIS seismographic data (1970-2021). Using console-based scripting techniques this study developed a series of maps aimed at the analysis of correlation between the earthquake distribution, seismicity, topographic and geophysical setting aimed at contributing to hazard mitigation, prognosis and risk assessment in Panama.}
+
+\Keywords{script; GMT; machine learning; data visualisation; mapping; geologic hazards; Central America}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% EDITOR SECTION (Do not change)
+\vol{XX} \no{Y} \year{2021}
+\setcounter{page}{1}
+\doi{10.24425/bpasts.2021.DOI}
+\begin{document}
+\maketitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% BODY OF THE ARTICLE
+
+\section{Introduction}
+
+Panama is an important region of Central America that presents interest both for economists and geographers (Figure 1). The Panama Canal plays the key economical role as a major connecting transshipment hub of world maritime trade with one of the Latin America’s busiest traffic density (RODRIGUE, J.-P., ASHAR, 2016; RODRIGUE, 2017). However, intensive industrial activities affect the environmental state of coastal ecosystems in Panama which results in triggered linked processes, such as river damming, forest flooding, species invasion, salt intrusions and chemical pollution, gradual hydro-climate change (SALGADO et al. 2020), deforestation and forest degradation (OESTREICHER et al. 2009) in the selected regions of Panama.
+
+At the same time, Panama is an environmentally important region that includes precious mangrove estuaries exposed to the environmental effects both from land and sea, with the high degree of connectivity between the coastal and terrestrial ecosystems (VALIELA et al. 2018). Forested mountainous landscapes in west of Panama (Figure 2) provide sources of drinking water, agriculture, and industry, including hydroelectric energy, silviculture and recreation (LARSEN, 2017). Mangroves are one of the most productive ecosystems in the world, providing existence for coastal livelihoods in eastern Pacific (LÓPEZ-ANGARITA et al. 2018). Finally, coastal marine protected areas of Panama present important biogeographic zones with rare species, benthic and fish communities and resources, e.g. Las Perlas Archipelago (MAIR et al. 2009).
+
+\begin{figure}
+\begin{center}
+	\includegraphics[width=0.99\linewidth]{img/fig_01.jpg} 
+\end{center}
+\caption{Topographic map of the study area: Panama and the surroundings. Source: author. Mapping: GMT}
+\label{fig:01}
+\end{figure}
+
+Natural ecosystems are deeply linked and experience the effects from the related phenomena and correlated processes as pointed in many studies \cite{Benfield}; KUHN et al. 2006; GOHL et al. 2006; LEE and SU, 2008; KLAUČO et al. 2013; RUANE et al. 2013; LEMENKOVA, 2020a). For instance, the example of the oceanographic effects on coastal ecosystems is given by SADATZKI et al. (2019) who noted phytoplankton blooms during seasonal coastal upwelling that affected the growth rate of the selected mollusk species of Panama. Prior geochemical and geologic studies in Panama have identified contribution of dissolved organic carbon (DOC) to the oceans by the small mountainous rivers that well illustrates the important influence of lithology and geomorphic parameters. Namely, the correlations between the land cover practices, bedrock lithology and marine sedimentation in the shelf areas show deep links and statistically significant environmental relationship (GOLDSMITH et al. 2015).
+
+The interplay between the geochemical and geologic setting and terrestrial and ocean ecosystems is further illustrated by GARDNER et al. (2014) who demonstrated correlations between the amount of rock-derived micronutrient Molybdenum and water sources in Panama (precipitation, canopy, soil, groundwater, seeps, streams). In turn, metals in tropical water and soils are transported to the microorganisms and plants. 
+Other studies show that geochemical trends are associated with multiple factors, e.g. soil, topography and land use (NEUMANN-COSEL et al. 2011). Processes in the seasonal tropics are highly complicated for detailed studies due to the seasonal changes and regional specifics, e.g. rapid soil decay, intensive insect activity, aggressive weathering (NIEDZIALEK and OGDEN, 2012). 
+
+This makes the inter-disciplinary studies especially actual for understanding of the environmental links. Linking multi-source data are essential for interpreting landscape patterns and their determinants and providing new information on forest functionality and structure (HIGGINS et al. 2014; KLAUČO et al. 2017; LEMENKOVA, 2021a). Various approaches to spatial data analysis exist and can be used for effective environmental mapping. Comparative analysis of the remote sensing data acquired for a study area is a useful tool for land cover classification of mangroves species of Panama and comparing underlying texture on difference image scenes (WANG et al. 2004).
+
+However, deeper links between the geophysical and topographic setting on the environmental sustainability of Panama are much less explained in the existing literature except for selected case studies. For instance, strong control of geology and topography on soil phosphorus in tropical rainforests of Panama is reported by DIETER et al. (2010) who pointed that biochemical changes may have important consequences for the biodiversity and distribution of plant species in ecosystems of Panama.  
+The Panama Isthmus is notable for the geological complexity where prominent volcanic fronts of eastern Central America are interrupted by a topographic low of unclear tectonic and magmatic origin as reported by \cite{Buchs}. They also noted the deep links between the seismicity in the region with the topography pointing that volcanism of Panama, combined with faulting, impeded the development of high topography in the Panama Canal area.
+
+Panama forms part of a tectonic microplate resting on the Caribbean and Nazca plates subducting under the Cocos and South America plates, respectively (DEMETS, 2011; BERGOEING, 2015). Tectonic plates subduction is a major cause of earthquakes and high seismicity along the Pacific margins (LEMENKOVA, 2019b, 2020b) which is also the case for Panama where a series of repetitive earthquakes is notable at various depths, as reported by the IRIS seismic center. 
+The links between the tectonic activity, submarine volcanism and seafloor geomorphology visible in the Panama Basin are detected by faulted volcanic ridges in the Panama Basin that are created by voluminous eruptions at the Galapagos hot spots. Geomorphic elements were also discovered, such as grabens,  active deep-sea erosion and submarine slopes (LONSDALE and FORNARI, 1980). 
+
+Tectonic subduction of the Panama Fracture Zone is an evolutionary process that creates variations in convergence rate, obliquity, and crustal thickness at its intersection with the Middle America Trench. This process is maintained by a southeast migrating of the Panama (Cocos-Nazca-Caribbean) Triple Junction and the development of an inner forearc thrust belt in the colliding Cocos Ridge and Nazca–Caribbean convergence, east of the triple junction. This results in the thrust faults in the Panama Fracture Zone and supports the seismicity in the region (MORELL et al. 2008).
+
+At the same time, specific regional tectonic and geological setting have direct industrial applications in construction works, hydroelectric potential, mineral resource exploration, to mention a few (RIVA PALACIO and HERNANDEZ LOPEZ, 1998; \cite{Corral}. Further details on the tectonic evolution and geologic setting of Panama can be found in relevant literature (e.g. see WOLTERS, 1986; VERGARA MUÑOZ, 1988; HARDY, 1991; \cite{Cardona,Fuchs}. 
+
+\section{Methodology}
+
+GIS are standard tools for cartographic visualization in a variety of applications in environmental mapping, e.g. forest reserve conservation, assessment of deforestation, mapping cultural landscape and protected zones, marine mapping and many more (PELLETIER et al. 2019; HARPER et al. 2010; SCHENKE and LEMENKOVA, 2008; RUCKER et al. 2011; SUETOVA et al. 2005a). However, scripting methods of cartographic approach present more in-depth ways of data processing and visualization (GAUGER et al. 2007; LEMENKOVA, 2020c). 
+
+\begin{figure}
+\begin{center}
+	\includegraphics[width=0.99\linewidth]{img/fig_02.jpg} 
+\end{center}
+\caption{3D model of the relief of Panama and coastal bathymetry. Source: author. Mapping: GMT}
+\label{fig:02}
+\end{figure}
+
+In the present study, the following data have been used. The IRIS seismological data from 1740 records (http://ds.iris.edu/ds/nodes/dmc/data/) have been collected as CSV table covering 40 years (1970-2021). These seismic events are located around the Panama coastline and vary according to their magnitude, depth of earthquake focus, precise date and time of event and coordinate location. The topographic data used as a basis map for Figure 1 and Figure 4 are from the GEBCO (SCHENKE, 2016; GEBCO Compilation Group, 2020) and ETOPO1 grid (AMANTE and EAKINS, 2009) used for 3D model in Figure 2. The geoid data were downloaded from EGM-2008 (PAVLIS et al. 2012). Gravity anomalies (Figure 5 and 6) were taken from the remote sensing based observations available from Scripps Institution of Oceanography based on the CryoSat-2 and Jason-1 satellite observations (SANDWELL et al. 2014).
+
+In this study, the Generic Mapping Tools (GMT) is used for mapping (WESSEL et al. 2019). Such a choice of technical tool has a significant advantage as a machine learning application in cartography, which is explained by the scripting functionality of GMT that totally differs from the traditional GIS. The scripts were written using the XCode and then run from the console of the GMT. The metadata of the spatial datasets were carefully checked and then data were visualized by GMT in the Mercator projection. To examine the elevation component in the topographic records this study used the GDAL based on the fast 'gdalinfo' utility. To visualize raster grids and add contour lines (isolines) this study applied  the following modules of teh GMT: ‘gmt grdimage pa\_relief.nc -Cpauline.cpt -R276.5/283/6.5/10.5  -JM6.0i -P -I+a15+ne0.75 -t30 -Xc -K > \$p’, and the ‘gmt grdcontour pa\_relief1.nc -R -J -C200 -W0.1p -O -K >> \$ps’. 
+
+The isolines of the geoid curvature are notably curved according to the topographic elevations as can be noted on the Figure 3. For the geoid case, the isolines are plotted every 0.5 m. It is shown that the isolines of the gravity anomalies and gradient gravity grid curvatures (Figures 5 and 6)  form a set of curved lines on the maps that well correspond to the topographic elevations and oceanic depression in the margins of the Gulf of Panama and the continental slope of the Caribbean Sea. 
+The respective legends of color palette scales on the maps determine possible range interval for the data extent, within which the variations of the data extension can be observed (Figure 1 to 6), and define the concentration and distribution of the highest or lowest values of the geoid undulations, geophysical grids and seismic magnitude with respect to the topography of Panama. The example of the legend (gere for the map of topograhy in Figure 1) in GMT script is as follows: ‘gmt psscale -Dg276.5/6.05+w15.3c/0.4c+h+o0.0/0i+ml -R -J -Cpauline.cpt -Bg500a500f50+l"Color scale 'wiki-celtic-sea': ... [R=-3954/2426, discrete, RGB, 25 segments]" -I0.2 -By+lm -O -K >> \$ps’. 
+
+\begin{figure}
+\begin{center}
+	\includegraphics[width=0.99\linewidth]{img/fig_03.jpg} 
+\end{center}
+\caption{Geoid undulations in Panama. Source: author. Mapping: GMT}
+\label{fig:03}
+\end{figure}
+
+Here the most important lines of code have the following meaning. The ‘-Bg500a500f50’ flag gives the frequency, annotation, tick, and gridline interval for the color legend; ‘-Dg276.5/6.05’ defines the reference start point on the map for the color scale using the ‘-Dg’ for map coordinates (in this cases: Mercator projections); ‘-I0.2’ flag adds the illumination effects; ‘-Cpauline.cpt ’ defines the selected color palette, which was pre-defined using the previous command: ‘gmt makecpt -Cwiki-celtic-sea.cpt > pauline.cpt’.
+The procedure of clipping the data to insert a small global map in Figure 1 has been used by 'psclip' module (gmt psclip -R276.5/283/6.5/10.5  -JM6.0i pa.txt -O -K >> \$ps) to visulized the location of Panama within the global context by the Digital Chart of the World (DCW), as well as to highlight the area of Panama over the semi-translucent image of the neighboring countries. For plotting coastal lines and borders of the countris the GMT module 'pscoast'  has been used as follows: 'gmt pscoast -R -J -Ia/thinner,blue -Na -N1/thicker,darkred -W0.1p -Df -O -K >> \$ps'. 
+
+To investigate spatial variations of earthquake events the ‘psxy’ module of GMT was used for visualization of the events by reading the (x,y,z) triplets from the files in .ngdc format and visualizes the code that plots symbols at the coordinate locations: ‘gmt psxy -R -J quakes\_PA\_s.ngdc -Wfaint -i4,3,6,6s0.05 -h3 -Scc -Csteps.cpt -O -K >> \$ps’. Here the earthquake events have been plotted using the '-Sc' flag that visualizes circles with size given as the diameter of circle signifying the magnitude of the earthquake. The specification of the code was applied from the GMT manual, and the IRIS file was visualized as the converted table (.ngdc), in order to determine all earthquakes, their magnitude and spatial variability indicated in the ‘-i4,3,6,6s0.05’ flag that signifies the numbers of columns in the table with the following names: Year, Month, Day, Lat, Lon, Depth, Mag. 
+
+Subset data from the raw dataset is particularly useful in cases of big data (millions of cells, gygabytes of size) where the spatial extent of the study area is well known beforehand. For this procedure, this study used the GMT module: 'gmt grdcut GEBCO\_2019.nc -R276.5/283/6.5/10.5  -Gpa\_relief.nc'. Here the ‘-R’ flag means the study extent in the W-E-S-N convention: ‘-R276.5/283/6.5/10.5’ (0 to 360° from W to E, 0 to 90° from S to N). 
+As demonstrated above, the logical approach of coding by GMT is largely based on using its syntax which is very similar to the programming languages (LEMENKOV and LEMENKOVA, 2021a, 2021b). The lines of codes signify the elements on the maps and form a script for each of the maps. The scripts were run from the console of the GMT and all six maps were plotted in PS format converted to JPG and presented in Figures 1 to 6.
+
+\section{Results}
+
+Exceptionally high values of geoid (Figure 3) can be seen in the mountainous regions of the Panama (values 17–20 m in the region of Cordilliera de Talamanca, southern coast of Peninsula de Azuero and easter regions of Panama, 77.5°-78.5°W) that well correspond to the topographic roughness in the highlands. In contrast, negative values of geoid can be seen over the Caribbean Sea basin in the north (from -4 to 0 m). 
+High resolution mapping of the seismicity (Figure 4) revealed 1740 individual seismic events in Panama located at various depths and having different magnitude and spatial location. A notable concentration of the earthquakes is seen in the western region of Panama shelf waters (~82°-83.5W), and on the border with Colombia (~77-78.5°W). The earthquakes vary by magnitudes from 2.9 to 7.8 at the depths from 0 (shallow earthquakes) to 225 m (near the west coast of Colombia), that are traceable from the IRIS seismicity website and visualised in this study using GMT (Figure 4).
+
+\begin{figure}
+\begin{center}
+	\includegraphics[width=0.99\linewidth]{img/fig_04.jpg} 
+\end{center}
+\caption{Seismicity in Panama based on the IRIS database (1970-2021)}
+\label{fig:04}
+\end{figure}
+
+The hallmark of the high values in free-air gravity anomalies (Figure 5 and 6) and vertical gradient is a concentration of the land masses in the mountain areas of Panama. Specifically, the higher geophysical anomalies can be noted by comparison of Figure 5 with 6 and Figures 1 with 2, which is followed by the lowest values correlated with the bathymetric depression of the seafloor along the western coasts of Panama which continues the Middle America Trench in the north (LEMENKOVA, 2019a). The topographic and geophysical patterns are compared to seismicity in the country with detected correlation with the tectonic subduction zone and earthquakes, as corresponds to the previous studies regarding the correlations between the seismicity and topographic roughness of the seafloor (BILEK et al. 2003).
+
+\begin{figure}
+\begin{center}
+	\includegraphics[width=0.99\linewidth]{img/fig_05.jpg} 
+\end{center}
+\caption{Free-air gravity anomaly for Panama}
+\label{fig:05}
+\end{figure}
+
+The appearance of the high gravity anomalies (over 220 mGal) in the mountainous regions is highly correlated with the geodynamic processes associated with the Earth structure, inner interior, and crustal surface, as well as geodetic and geophysical effects (LEMENKVOA, 2021c). This regards the shape and rotation of the Earth, land mass distribution resulting in contrasting topographic patterns and distribution of features: depressions (deep oceanic trenches) and elevations (mountain ranges). 
+
+The results well corresponds to the existing reports on the seismic activity and tectonic instability of the Panama region. Specifically, the presented maps of seismically active areas around Panama correspond with prior studies that have shown (VARGAS et al. 2018) that Costa Rica Ridge and the Panama Fracture Zone are significant tectonic features related to thermal anomalies in Panama. Recordings of earthquakes on oceanic bottom seismographs shown magmatic and hydrothermal activity of the upper lithosphere in Panama region that can be a source of hazard and risk. Using the comparison of gravity, geoid and earthquake data, the relationship between seismic activity and topography of Panama was explored to determine if it could be used as an indicator to map hazard vulnerability and perform risk assessment in the regions prone to seismic activity along the coasts of both the Caribbean Sea and the Pacific Ocean. 
+
+The results indicate that the most notable series of earthquakes seismic activity are mostly concentrated in the following regions of Panama: 1) south-western region (square of 82°-83°W, 7°-10°N) which is explained by the tectonic faulting in this area; 2) south-eastern region in the border with Colombia (square 77°-78.8°W, 6°-8.5°N) which can be explained by the tectonically active margins of the subducting Nazca Plate along the South American continent; 3) sporadic, less prominent earthquake activity in the southern coasts of he Caribbean Sea (78°-80°W, 9.3°-10°N) noting the movements of the Caribbean plate colliding with South American and Cocos plates in a more complex tectonic movement. 
+
+\begin{figure}
+\begin{center}
+	\includegraphics[width=0.99\linewidth]{img/fig_06.jpg} 
+\end{center}
+\caption{Vertical gradient of gravity anomaly for Panama}
+\label{fig:06}
+\end{figure}
+
+Earthquakes, their spatial distribution, magnitude and frequency, are significantly influenced by a variety of regional geologic and tectonic factors, such as plate subduction, run-off, topography, distribution of geologic fault lines and regional geologic context, soil type, its strength and resistivity (clay, sandy, etc.). In this context, study of the correlation enables to take an insight into the factors controlling the seismicity in the region. Based on the examined results, the geophysical gravity grids are well correlated with topography showing correspondence with isolines. At the same time, gravity is poorly correlated with seismicity and active tectonic zones (especially in the western Panama, 81°-82.5°W), although there is a certain impact of the geodynamic phenomena on geological processes. 
+
+Regional tectonics of the Caribbean Sea and the marginal eastern Pacific in conjunction with the greater topographic heterogeneity in both terrestrial areas and seafloor bathymetry are known to influence regional geologic variability and seismicity \cite{Duncan} RODRÍGUEZ-ZURRUNERO et al. 2020; NARANJO-VESGA et al. 2020;  IDÁRRAGA-GARCÍA et al. 2021; LEMENKOVA, 2021b). This deep interplay between the geophysics, geology and tectonics may explain why the general correlation between seismicity and topography is not as strong as between the geology and geophysics. At the same time, when this correlation is analyzed within regional zones of Panama (SW, northern coasts of the Caribbean Sea, SE at the Colombia affected by the Andean geology) stronger correlations are observed between the magnitude, distribution and frequency of earthquakes.
+
+\section{Conclusion}
+This study demonstrated the case of integrated analysis of seismicity in Panama in context of its topographic, geophysical and environmental setting. Panama presents a perfect example for the multi-disciplinary studies due to the combination of three important factors: 1) unique geospatial location straddling the two oceans, the Atlantic (Caribbean Sea) and the Pacific Ocean with clearly visible bathymetric depressions in the seafloor, 2) tectonic activity of the subducting plate largely affecting and inducing the seismicity, 3) mountainous geomorphology in the central regions of the country.
+The demonstrated use of the Generic Mapping Tools (GMT), an advanced cartographic toolset for spatial data processing, modelling and visualization shown applications of scripting languages as part of the machine learning in modern cartographic work. The GMT scripting cartographic methods employed in this study offer improvement over previous GIS-based geological and geophysical mapping of Panama in several technical and methodological aspects that should be briefly summarized below as follows.  
+
+First, because data-driven mapping requires rapid and automated data processing that can only be used by the advanced methods such as GMT which provides smart language for console-based cartographic visualizing from the shell/bash scripts which is effective and fast compared to the conventional mapping workflow \cite{Ambraseys}; SUETOVA et al. 2005b; LEMENKOVA et al. 2012; WABNITZ et al. 2008; LEMENKOVA, 2011; GONZALEZ et al. 2016).
+Second, this study relies upon the most reputable seismic database of IRIS which is being updated regularly and using generated reports from multiple seismic stations worldwide using accepted model of data capture with comprehensive information regarding metadata (event earthquake frequency, depth, magnitude, precise coordinates and description of locations), downscaled to the regional level of Panama. 
+
+Third, this study presents a series of six new compatible maps in the identical scale and cartographic projections that enable to compare and reuse the maps in future research in similar studies. The maps were plotted by GMT scripts using the automated machine learning approach that ensures the print quality and accuracy of maps based on the high-resolution data. Rather than using handmade routine as in similar GIS-based studies, the GMT scripting presents the improved workflow that emphasizes the importance of machine learning as a part of the artificial intelligence in contemporary cartography.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% ACKNOWLEDGEMENTS
+\begin{acknowledgements}
+The author thanks the reviewers and editor for the processing of this manuscript.
+\end{acknowledgements}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% REFERENCES
+%% Since January 1st 2021, IEEE Citation Style should be applied.
+%\bibliographystyle{IEEEtran}
+\bibliographystyle{IEEEtranUrldate}
+
+%% Change to your *.bst file
+\bibliography{Lemenkova}
+
+\end{document}
+
+
